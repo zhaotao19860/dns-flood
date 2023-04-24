@@ -1,0 +1,8 @@
+Revision history of dnsflood.
+Based on https://github.com/nickwinn/dns-flood.
+
+ATTENTION: version number must in the format of [0-9]+.[0-9]+.[0-9]
+
+1.0.0 2023-04-24 zhaotao <zhaotao19860@qq.com>
+    - [bug]
+        修复-t参数只支持a记录的情况；

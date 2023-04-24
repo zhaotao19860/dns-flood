@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -13,6 +14,7 @@
 #include <netinet/udp.h>
 #include <sys/wait.h>
 #include <getopt.h>
+#include <arpa/inet.h>
 
 #define	  CLASS_INET 1
 
@@ -193,17 +195,13 @@ void nameformatIP(char *ip, char *resu)
 
 int make_question_packet(char *data, char *name, int type)
 {
-	if (type == TYPE_A) {
-		nameformat(name, data);
-		*((u_short *) (data + strlen(data) + 1)) = htons(TYPE_A);
-	}
-/* for other type querry
 	if(type == TYPE_PTR){
 		nameformatIP(name,data);
-  	*( (u_short *) (data+strlen(data)+1) ) = htons(TYPE_PTR);
+  	*( (u_short *) (data+strlen(data)+1) ) = htons(type);
+	}else{
+		nameformat(name, data);
+		*((u_short *) (data + strlen(data) + 1)) = htons(type);
 	}
-       
-*/
 
 	*((u_short *) (data + strlen(data) + 3)) = htons(CLASS_INET);
 
@@ -397,7 +395,7 @@ int main(int argc, char **argv)
 		}
 
 		dns_header->id = random();
-		dns_datalen = make_question_packet(dns_data, qname, TYPE_A);
+		dns_datalen = make_question_packet(dns_data, qname, qtype);
 
 		udp_datalen = sizeof(struct dnshdr) + dns_datalen;
 		ip_datalen = sizeof(struct udphdr) + udp_datalen;
